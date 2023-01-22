@@ -1,18 +1,15 @@
 import tkinter as tk
 
+from new_operation import New
 
 root = tk.Tk()
 root.title("Noter")
 root.geometry("1024x720+0+0")
 root.resizable(0, 0)
 
-root.attributes('-transparent', 1)
-root.config(bg='')
-
-backg_img = tk.PhotoImage(file='images/images.001.png')
+backg_img = tk.PhotoImage(file='design/design.001.png')
 background = tk.Label(root, image=backg_img, width=1024, height=720)
 background.place(relx=0, rely=0)
-
 
 button1 = tk.Button(root)
 button1.place(x=720, y=220, width=252, height=73)
@@ -21,6 +18,7 @@ button1.configure(cursor="hand")
 button1.configure(font="-family {Poppins SemiBold} -size 20")
 button1.configure(borderwidth="0")
 button1.configure(text="عملية جديدة")
+button1.configure(command=New)
 
 button2 = tk.Button(root)
 button2.place(x=389, y=220, width=252, height=73)
