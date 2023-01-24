@@ -30,24 +30,23 @@ class New:
         self.new.mainloop()
 
 
-# seller_name = tk.StringVar()
-# seller_ni = tk.StringVar()
-# seller_birthdate = tk.StringVar()
-# seller_birthplace = tk.StringVar()
-#
-# buyer_name = tk.StringVar()
-# buyer_ni = tk.StringVar()
-# buyer_birthdate = tk.StringVar()
-# buyer_birthplace = tk.StringVar()
-#
-# city = tk.StringVar()
-# block = tk.StringVar()
-# real_est_date = tk.StringVar()
-# real_est_number = tk.StringVar()
-#
-# amount = tk.StringVar()
-# date = tk.StringVar()
-# code = tk.StringVar()
+def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_bithd, b_birthp, city, block,
+                               re_data, re_number, amount, date, code):
+    facture = tk.Toplevel()
+    facture.geometry("400x720")
+    facture.title("الوثيقة")
+
+    text = tk.Text(facture, font=('calibri' , 16))
+    text.insert('end', f"""
+        أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
+         أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها عندها إفادة () صادرة بتاريخ {re_data}\
+          من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_bithd} في {b_birthp} رقم البطاقة الوطنية {amount}\
+           مقابل مبلغ قدره {re_number}    استلم البائع المبلغ ولم تبقى بينهم
+    """)
+    text.pack()
+
+    facture.mainloop()
+
 
 class RealEstate:
     def __init__(self):
@@ -124,11 +123,13 @@ class RealEstate:
         self.entry14 = tk.Entry(self.top, justify='center')
         self.entry14.place(x=480, y=550, width=120, height=40)
         self.entry14.insert('0', self.date)
+        self.entry14.configure(state='disabled')
         # self.entry14.configure(textvariable=date)
 
         self.entry15 = tk.Entry(self.top, justify='center')
         self.entry15.place(x=280, y=550, width=120, height=40)
         self.entry15.insert('0', self.code)
+        self.entry15.configure(state='disabled')
         # self.entry15.configure(textvariable=code)
 
         # buttons
@@ -174,6 +175,16 @@ class RealEstate:
                                                         re_number = self.entry12.get()
                                                         if self.entry13.get():
                                                             amount = self.entry13.get()
+                                                            if self.entry14.get() and self.entry15.get():
+                                                                date = self.entry14.get()
+                                                                code = self.entry15.get()
+
+                                                                create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
+                                                                                           buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
+                                                                                           city, block, re_data, re_number, amount, date, code)
+
+                                                            else:
+                                                                messagebox.showerror('خطأ', "يوجد خطأ في المدخلات")
                                                         else:
                                                             messagebox.showerror('خطأ', "يجب إدخال المبلغ")
                                                     else:
