@@ -3,6 +3,8 @@ from tkinter import messagebox
 from datetime import datetime
 import os
 
+from utils import exitt
+
 dir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -11,6 +13,7 @@ class New:
         self.new = tk.Toplevel()
         self.new.title("عملية جديدة")
         self.new.geometry("1024x720+0+0")
+        self.new.protocol("WM_DELETE_WINDOW", lambda: exitt(self.new))
 
         self.background_img = tk.PhotoImage(file=os.path.join(dir, 'design/design.002.png'))
         self.label1 = tk.Label(self.new)
@@ -62,6 +65,7 @@ class RealEstate:
         self.top = tk.Toplevel()
         self.top.geometry("1024x720+0+0")
         self.top.title("عقار")
+        self.top.protocol("WM_DELETE_WINDOW", lambda: exitt(self.top))
 
         self.now = datetime.now()
         self.date = self.now.strftime("%Y-%m-%d")
