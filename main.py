@@ -1,13 +1,16 @@
 import tkinter as tk
-
+import os
 from new_operation import New
+
+
+dir = os.path.abspath(os.path.dirname(__file__))
 
 root = tk.Tk()
 root.title("Noter")
 root.geometry("1024x720+0+0")
 root.resizable(0, 0)
 
-backg_img = tk.PhotoImage(file='design/design.001.png')
+backg_img = tk.PhotoImage(file=os.path.join(dir, 'design/design.001.png'))
 background = tk.Label(root, image=backg_img, width=1024, height=720)
 background.place(relx=0, rely=0)
 
@@ -39,3 +42,4 @@ button3.configure(background='orange')
 button3.configure(text="بحث")
 
 root.mainloop()
+

@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
+import os
+
+dir = os.path.abspath(os.path.dirname(__file__))
 
 
 class New:
@@ -9,7 +12,7 @@ class New:
         self.new.title("عملية جديدة")
         self.new.geometry("1024x720+0+0")
 
-        self.background_img = tk.PhotoImage(file="design/design.002.png")
+        self.background_img = tk.PhotoImage(file=os.path.join(dir, 'design/design.002.png'))
         self.label1 = tk.Label(self.new)
         self.label1.configure(image=self.background_img)
         self.label1.place(relx=0, rely=0)
@@ -36,14 +39,20 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     facture.geometry("400x720")
     facture.title("الوثيقة")
 
-    text = tk.Text(facture, font=('calibri' , 16))
+    text = tk.Text(facture, font=('calibri', 16))
     text.insert('end', f"""
-        أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
-         أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها عندها إفادة () صادرة بتاريخ {re_data}\
-          من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_bithd} في {b_birthp} رقم البطاقة الوطنية {amount}\
-           مقابل مبلغ قدره {re_number}    استلم البائع المبلغ ولم تبقى بينهم
+            No:                                                    {code}    :الرقم 
+            Date:                                                {date}         :التاريخ
     """)
+    text.insert('end', f"""
+    أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
+     أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data}\
+      من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_bithd} في {b_birthp} رقم البطاقة الوطنية {b_ni}\
+       مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
+    """)
+    text.configure(state='disabled')
     text.pack()
+
 
     facture.mainloop()
 
@@ -59,66 +68,66 @@ class RealEstate:
         self.code = self.now.strftime("%Y%m%d%H%M%S")
 
         self.label1 = tk.Label(self.top)
-        self.backg = tk.PhotoImage(file="design/design.003.png")
+        self.backg = tk.PhotoImage(file=os.path.join(dir, 'design/design.003.png'))
         self.label1.configure(image=self.backg)
         self.label1.place(relx=0, rely=0)
 
         # اليائع
         self.entry1 = tk.Entry(self.top, justify='right')
         self.entry1.place(x=550, y=160, width=240, height=40)
-        # self.entry1.configure(textvariable=seller_name)
+        self.entry1.insert(0, 'محمد الحسن حبيب')
 
         self.entry2 = tk.Entry(self.top, justify='center')
         self.entry2.place(x=380, y=160, width=120, height=40)
-        # self.entry2.configure(textvariable=seller_ni)
+        self.entry2.insert(0, '222222222')
 
         self.entry3 = tk.Entry(self.top, justify='center')
         self.entry3.place(x=200, y=160, width=100, height=40)
-        # self.entry3.configure(textvariable=seller_birthdate)
+        self.entry3.insert(0, '12/12/1995')
 
         self.entry4 = tk.Entry(self.top, justify='right')
         self.entry4.place(x=40, y=160, width=100, height=40)
-        # self.entry4.configure(textvariable=seller_birthplace)
+        self.entry4.insert(0, 'بوكي')
 
         # المشتري
         self.entry5 = tk.Entry(self.top, justify='right')
         self.entry5.place(x=550, y=282, width=240, height=40)
-        # self.entry5.configure(textvariable=buyer_name)
+        self.entry5.insert(0, 'محمد محمود')
 
         self.entry6 = tk.Entry(self.top, justify='center')
         self.entry6.place(x=380, y=282, width=120, height=40)
-        # self.entry6.configure(textvariable=buyer_ni)
+        self.entry6.insert(0, '33333333')
 
         self.entry7 = tk.Entry(self.top, justify='center')
         self.entry7.place(x=200, y=282, width=100, height=40)
-        # self.entry7.configure(textvariable=buyer_birthdate)
+        self.entry7.insert(0, '10/10/1989')
 
         self.entry8 = tk.Entry(self.top, justify='right')
         self.entry8.place(x=40, y=282, width=100, height=40)
-        # self.entry8.configure(textvariable=buyer_birthplace)
+        self.entry8.insert(0, 'روصو')
 
         # تفاصيل العقار
         self.entry9 = tk.Entry(self.top, justify='right')
         self.entry9.place(x=680, y=415, width=120, height=40)
-        # self.entry9.configure(textvariable=city)
+        self.entry9.insert(0, 'دار النعيم')
 
         self.entry10 = tk.Entry(self.top, justify='center')
         self.entry10.place(x=480, y=415, width=120, height=40)
-        # self.entry10.configure(textvariable=block)
+        self.entry10.insert(0, 'TNS1')
 
         self.entry11 = tk.Entry(self.top, justify='center')
         self.entry11.place(x=280, y=415, width=120, height=40)
-        # self.entry11.configure(textvariable=real_est_date)
+        self.entry11.insert(0, '2013')
 
         self.entry12 = tk.Entry(self.top, justify='right')
         self.entry12.place(x=80, y=415, width=120, height=40)
-        # self.entry12.configure(textvariable=real_est_number)
+        self.entry12.insert(0, '750')
 
 
         # تفاصيل العملية
         self.entry13 = tk.Entry(self.top, justify='center')
         self.entry13.place(x=680, y=550, width=120, height=40)
-        # self.entry13.configure(textvariable=amount)
+        self.entry13.insert(0, '40000')
 
         self.entry14 = tk.Entry(self.top, justify='center')
         self.entry14.place(x=480, y=550, width=120, height=40)
