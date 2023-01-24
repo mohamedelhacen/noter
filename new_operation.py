@@ -1,12 +1,15 @@
+import sqlite3
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
 import os
+import sqlite3
 
 from utils import exitt
 
 dir = os.path.abspath(os.path.dirname(__file__))
-
+db = sqlite3.connect(os.path.join(dir, 'database.db'))
+cursor = db.cursor()
 
 class New:
     def __init__(self):
@@ -36,8 +39,32 @@ class New:
         self.new.mainloop()
 
 
-def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_bithd, b_birthp, city, block,
+def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, city, block,
                                re_data, re_number, amount, date, code):
+
+    cursor.execute("""INSERT INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?) WHERE NOT EXISTS (
+                    SELECT ni FROM people WHERE ni = ?)
+    """, [s_name, s_ni, s_birthd, s_birthp, s_ni])
+    cursor.execute(f"""INSERT INTO people(name, ni, birth_date, birth_place), 
+                    [{b_name}, {b_ni}, {b_birthd}, {b_birthp}] WHERE NOT EXISTS (
+                    SELECT ni FROM people WHERE ni = ?)
+    """, [b_ni])
+
+    cursor.execute(f"""INSERT INTO real_estate(city, block, date, number), 
+                    [{city}, {block}, {re_data}, {re_number}] WHERE NOT EXISTS (
+                    SELECT * FROM real_estate WHERE city = ? and block = ? and date = ? and number = ?)
+    """, [city, block, re_data, re_number])
+
+    s_id = cursor.execute("SELECT ni FROM people WHERE ni = ?", [s_ni])
+    b_id = cursor.execute("SELECT ni FROM people WHERE ni = ?", [s_ni])
+    re_id = cursor.execute("SELECT id FROM real_estate WHERE city = ? and block = ? and date = ? and number = ?",
+                           [city, block, re_data, re_number])
+
+    cursor.execute(f"""INSERT INTO real_estate_sales(amount, date, code, seller_Id, buyer_Id, real_estate_Id),
+                [{amount}, {date}, {code}, {s_id}, {b_id}, {re_id}]
+    """)
+
+
     facture = tk.Toplevel()
     facture.geometry("400x720")
     facture.title("الوثيقة")

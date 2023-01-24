@@ -1,9 +1,48 @@
+import sqlite3
 import tkinter as tk
 import os
 from new_operation import New
 from utils import exitt
 
 dir = os.path.abspath(os.path.dirname(__file__))
+
+conn = sqlite3.connect(os.path.join(dir, 'database.db'))
+cur = conn.cursor()
+
+cur.execute("""CREATE TABLE IF NOT EXISTS real_estate_sales (
+            id INTEGER PRIMARY KEY,
+            amount REAL NOT NULL,
+            date DATE NOT NULL,
+            code INTEGER NOT NULL,
+            seller_Id INTEGER NOT NULL,
+            buyer_Id INTEGER NOT NULL,
+            real_estate_Id INTEGER NOT NULL,
+            FOREIGN KEY (seller_Id) REFERENCES people (id),
+            FOREIGN KEY (buyer_Id) REFERENCES people (id),
+            FOREIGN KEY (real_estate_Id) REFERENCES real_estate(id)
+            )
+""")
+
+cur.execute("""CREATE TABLE IF NOT EXISTS real_estate (
+            id INTEGER PRIMARY KEY,
+            city VARCHAR(50) NOT NULL,
+            block VARCHAR(50) NOT NULL,
+            date DATE NOT NULL,
+            number VARCHAR(50) NOT NULL
+            )
+""")
+
+cur.execute("""CREATE TABLE IF NOT EXISTS people (
+            id INTEGER PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            ni INTEGER NOT NULL UNIQUE,
+            birth_date DATE NOT NULL,
+            birth_place VARCHAR(50) NOT NULL
+            )
+""")
+
+conn.commit()
+
 
 root = tk.Tk()
 root.title("Noter")
