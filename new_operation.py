@@ -1,4 +1,3 @@
-import sqlite3
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
@@ -11,9 +10,10 @@ dir = os.path.abspath(os.path.dirname(__file__))
 db = sqlite3.connect(os.path.join(dir, 'database.db'))
 cursor = db.cursor()
 
+
 class New:
-    def __init__(self):
-        self.new = tk.Toplevel()
+    def __init__(self, top=None):
+        self.new = tk.Toplevel(top)
         self.new.title("عملية جديدة")
         self.new.geometry("1024x720+0+0")
         self.new.protocol("WM_DELETE_WINDOW", lambda: exitt(self.new))
@@ -36,52 +36,68 @@ class New:
         self.button3.place(x=22, y=210, width=252, height=72)
         self.button3.configure(text="محل تجاري")
 
+        button4 = tk.Button(self.new)
+        button4.place(x=358, y=527, width=252, height=73)
+        button4.configure(relief="flat", overrelief="flat")
+        button4.configure(cursor="hand")
+        button4.configure(font="-family {Poppins SemiBold} -size 20")
+        button4.configure(borderwidth=0)
+        button4.configure(border=0)
+        button4.configure(background='orange')
+        button4.configure(text="خروج")
+        button4.configure(command=lambda: exitt(top))
+
         self.new.mainloop()
 
 
-def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, city, block,
+def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
                                re_data, re_number, amount, date, code):
 
-    cursor.execute("""INSERT INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?) WHERE NOT EXISTS (
-                    SELECT ni FROM people WHERE ni = ?)
-    """, [s_name, s_ni, s_birthd, s_birthp, s_ni])
-    cursor.execute(f"""INSERT INTO people(name, ni, birth_date, birth_place), 
-                    [{b_name}, {b_ni}, {b_birthd}, {b_birthp}] WHERE NOT EXISTS (
-                    SELECT ni FROM people WHERE ni = ?)
-    """, [b_ni])
+    cursor.execute("""INSERT OR IGNORE INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?)""",
+                   [s_name, s_ni, s_birthd, s_birthp])
 
-    cursor.execute(f"""INSERT INTO real_estate(city, block, date, number), 
-                    [{city}, {block}, {re_data}, {re_number}] WHERE NOT EXISTS (
-                    SELECT * FROM real_estate WHERE city = ? and block = ? and date = ? and number = ?)
-    """, [city, block, re_data, re_number])
+    cursor.execute("""INSERT OR IGNORE INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?)""",
+                   [b_name, b_ni, b_birthd, b_birthp])
 
-    s_id = cursor.execute("SELECT ni FROM people WHERE ni = ?", [s_ni])
-    b_id = cursor.execute("SELECT ni FROM people WHERE ni = ?", [s_ni])
-    re_id = cursor.execute("SELECT id FROM real_estate WHERE city = ? and block = ? and date = ? and number = ?",
-                           [city, block, re_data, re_number])
+    cursor.execute(f"""INSERT OR IGNORE INTO real_estate(nbr_rec, city, block, date, number) VALUES (?, ?, ?, ?, ?)""",
+                   [nbr_rec, city, block, re_data, re_number])
 
-    cursor.execute(f"""INSERT INTO real_estate_sales(amount, date, code, seller_Id, buyer_Id, real_estate_Id),
-                [{amount}, {date}, {code}, {s_id}, {b_id}, {re_id}]
-    """)
+    s_id = cursor.execute("SELECT id FROM people WHERE ni = ?", [s_ni]).fetchone()[0]
+    b_id = cursor.execute("SELECT id FROM people WHERE ni = ?", [b_ni]).fetchone()[0]
+    re_id = cursor.execute("SELECT id FROM real_estate WHERE nbr_rec = ?", [re_number]).fetchone()[0]
 
+    cursor.execute("""INSERT INTO real_estate_sales(amount, date, code, seller_Id, buyer_Id, real_estate_Id) 
+    VALUES (?, ?, ?, ?, ?, ?)""", [amount, date, code, s_id, b_id, re_id])
 
+    db.commit()
     facture = tk.Toplevel()
     facture.geometry("400x720")
     facture.title("الوثيقة")
 
-    text = tk.Text(facture, font=('calibri', 16))
-    text.insert('end', f"""
-            No:                                                    {code}    :الرقم 
-            Date:                                                {date}         :التاريخ
-    """)
-    text.insert('end', f"""
-    أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
-     أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data}\
-      من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_bithd} في {b_birthp} رقم البطاقة الوطنية {b_ni}\
-       مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
-    """)
-    text.configure(state='disabled')
-    text.pack()
+    text = f"""
+     أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
+      أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data}\
+       من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni}\
+        مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
+     """
+    canvas = tk.Canvas(facture, borderwidth=1)
+    canvas.place(x=0, y=20, width=400, height=500)
+    doc = tk.Label(canvas, text=text, font=('calibri', 16), wraplength=350, justify='right')
+    doc.place(x=0, y=20, width=400, height=500)
+
+    # text = tk.Text(facture, font=('calibri', 16))
+    # text.insert('end', f"""
+    #         No:                                                    {code}    :الرقم
+    #         Date:                                                {date}         :التاريخ
+    # """)
+    # text.insert('end', f"""
+    # أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
+    #  أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data}\
+    #   من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni}\
+    #    مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
+    # """)
+    # text.configure(state='disabled')
+    # text.pack()
 
 
     facture.mainloop()
@@ -140,37 +156,39 @@ class RealEstate:
         # تفاصيل العقار
         self.entry9 = tk.Entry(self.top, justify='right')
         self.entry9.place(x=680, y=415, width=120, height=40)
-        self.entry9.insert(0, 'دار النعيم')
+        self.entry9.insert(0, 'TNS1-1844')
 
-        self.entry10 = tk.Entry(self.top, justify='center')
-        self.entry10.place(x=480, y=415, width=120, height=40)
-        self.entry10.insert(0, 'TNS1')
+        self.entry10 = tk.Entry(self.top, justify='right')
+        self.entry10.place(x=680, y=415, width=120, height=40)
+        self.entry10.insert(0, 'دار النعيم')
 
         self.entry11 = tk.Entry(self.top, justify='center')
-        self.entry11.place(x=280, y=415, width=120, height=40)
-        self.entry11.insert(0, '2013')
+        self.entry11.place(x=480, y=415, width=120, height=40)
+        self.entry11.insert(0, 'TNS1')
 
-        self.entry12 = tk.Entry(self.top, justify='right')
-        self.entry12.place(x=80, y=415, width=120, height=40)
-        self.entry12.insert(0, '750')
+        self.entry12 = tk.Entry(self.top, justify='center')
+        self.entry12.place(x=280, y=415, width=120, height=40)
+        self.entry12.insert(0, '2013')
+
+        self.entry13 = tk.Entry(self.top, justify='right')
+        self.entry13.place(x=80, y=415, width=120, height=40)
+        self.entry13.insert(0, '750')
 
 
         # تفاصيل العملية
-        self.entry13 = tk.Entry(self.top, justify='center')
-        self.entry13.place(x=680, y=550, width=120, height=40)
-        self.entry13.insert(0, '40000')
-
         self.entry14 = tk.Entry(self.top, justify='center')
-        self.entry14.place(x=480, y=550, width=120, height=40)
-        self.entry14.insert('0', self.date)
-        self.entry14.configure(state='disabled')
-        # self.entry14.configure(textvariable=date)
+        self.entry14.place(x=680, y=550, width=120, height=40)
+        self.entry14.insert(0, '40000')
 
         self.entry15 = tk.Entry(self.top, justify='center')
-        self.entry15.place(x=280, y=550, width=120, height=40)
-        self.entry15.insert('0', self.code)
+        self.entry15.place(x=480, y=550, width=120, height=40)
+        self.entry15.insert('0', self.date)
         self.entry15.configure(state='disabled')
-        # self.entry15.configure(textvariable=code)
+
+        self.entry16 = tk.Entry(self.top, justify='center')
+        self.entry16.place(x=280, y=550, width=120, height=40)
+        self.entry16.insert('0', self.code)
+        self.entry16.configure(state='disabled')
 
         # buttons
         self.button1 = tk.Button(self.top, text="إلغاء")
@@ -206,35 +224,39 @@ class RealEstate:
                                     if self.entry8.get():
                                         buyer_birthplace = self.entry8.get()
                                         if self.entry9.get():
-                                            city = self.entry9.get()
+                                            nbr_rec = self.entry9.get()
                                             if self.entry10.get():
-                                                block = self.entry10.get()
+                                                city = self.entry10.get()
                                                 if self.entry11.get():
-                                                    re_data = self.entry11.get()
+                                                    block = self.entry11.get()
                                                     if self.entry12.get():
-                                                        re_number = self.entry12.get()
+                                                        re_data = self.entry12.get()
                                                         if self.entry13.get():
-                                                            amount = self.entry13.get()
-                                                            if self.entry14.get() and self.entry15.get():
-                                                                date = self.entry14.get()
-                                                                code = self.entry15.get()
+                                                            re_number = self.entry13.get()
+                                                            if self.entry14.get():
+                                                                amount = self.entry14.get()
+                                                                if self.entry15.get() and self.entry16.get():
+                                                                    date = self.entry15.get()
+                                                                    code = self.entry16.get()
 
-                                                                create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
-                                                                                           buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
-                                                                                           city, block, re_data, re_number, amount, date, code)
+                                                                    create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
+                                                                                               buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
+                                                                                               nbr_rec, city, block, re_data, re_number, amount, date, code)
 
+                                                                else:
+                                                                    messagebox.showerror('خطأ', "يوجد خطأ في المدخلات")
                                                             else:
-                                                                messagebox.showerror('خطأ', "يوجد خطأ في المدخلات")
+                                                                messagebox.showerror('خطأ', "يجب إدخال المبلغ")
                                                         else:
-                                                            messagebox.showerror('خطأ', "يجب إدخال المبلغ")
+                                                            messagebox.showerror('خطأ', "يجب إدخال رقم العقار")
                                                     else:
-                                                        messagebox.showerror('خطأ', "يجب إدخال رقم العقار")
+                                                        messagebox.showerror('خطأ', "يجب إدخال تاريخ الإصدار")
                                                 else:
-                                                    messagebox.showerror('خطأ', "يجب إدخال تاريخ الإصدار")
+                                                    messagebox.showerror('خطأ', "يجب إدخال القطاع")
                                             else:
-                                                messagebox.showerror('خطأ', "يجب إدخال القطاع")
+                                                messagebox.showerror('خطأ', "يجب إدخال المقاطعة")
                                         else:
-                                            messagebox.showerror('خطأ', "يجب إدخال المقاطعة")
+                                            messagebox.showerror('خطأ', "يجب إدخال رقم الوحدة السكنية")
                                     else:
                                         messagebox.showerror('خطأ', "يجب إدخال محل ميلاد المشتري")
                                 else:

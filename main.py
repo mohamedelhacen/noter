@@ -25,6 +25,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS real_estate_sales (
 
 cur.execute("""CREATE TABLE IF NOT EXISTS real_estate (
             id INTEGER PRIMARY KEY,
+            nbr_rec VARCHAR(50) NOT NULL UNIQUE,
             city VARCHAR(50) NOT NULL,
             block VARCHAR(50) NOT NULL,
             date DATE NOT NULL,
@@ -61,7 +62,7 @@ button1.configure(cursor="hand")
 button1.configure(font="-family {Poppins SemiBold} -size 20")
 button1.configure(borderwidth="0")
 button1.configure(text="عملية جديدة")
-button1.configure(command=New)
+button1.configure(command=lambda: New(root))
 
 button2 = tk.Button(root)
 button2.place(x=389, y=220, width=252, height=73)
@@ -81,5 +82,15 @@ button3.configure(border=0)
 button3.configure(background='orange')
 button3.configure(text="بحث")
 
+button4 = tk.Button(root)
+button4.place(x=358, y=527, width=252, height=73)
+button4.configure(relief="flat", overrelief="flat")
+button4.configure(cursor="hand")
+button4.configure(font="-family {Poppins SemiBold} -size 20")
+button4.configure(borderwidth=0)
+button4.configure(border=0)
+button4.configure(background='orange')
+button4.configure(text="خروج")
+button4.configure(command=lambda: exitt(root))
 root.mainloop()
 
