@@ -71,34 +71,32 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
 
     db.commit()
     facture = tk.Toplevel()
-    facture.geometry("400x720")
+    facture.geometry("500x720")
     facture.title("الوثيقة")
 
-    text = f"""
-     أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
-      أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data}\
-       من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni}\
-        مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
+    fac_img = tk.PhotoImage(file=os.path.join(dir, 'design/fac.001.png'))
+    backg = tk.Label(facture, image=fac_img)
+    backg.place(x=0, y=0, width=500, height=700)
+
+    content = f""" أشهدني واستكتبني السيد(ة){s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni} أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data} من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni} مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
      """
-    canvas = tk.Canvas(facture, borderwidth=1)
-    canvas.place(x=0, y=20, width=400, height=500)
-    doc = tk.Label(canvas, text=text, font=('calibri', 16), wraplength=350, justify='right')
-    doc.place(x=0, y=20, width=400, height=500)
+    # canvas = tk.Frame(facture, border=1)
+    # canvas.place(x=0, y=180, width=500, height=600, bordermode='outside')
 
-    # text = tk.Text(facture, font=('calibri', 16))
-    # text.insert('end', f"""
-    #         No:                                                    {code}    :الرقم
-    #         Date:                                                {date}         :التاريخ
-    # """)
-    # text.insert('end', f"""
-    # أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni}\
-    #  أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data}\
-    #   من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni}\
-    #    مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
-    # """)
-    # text.configure(state='disabled')
-    # text.pack()
+    dt = tk.Label(facture, text=code, font=('Helvetica', 16), justify='center')
+    dt.place(x=180, y=100, width=150, height=25)
+    cd = tk.Label(facture, text=date, font=('Helvetica', 16), justify='right')
+    cd.place(x=180, y=130, width=120, height=25)
 
+    # doc = tk.Label(canvas, text=text, font=('Helvetica', 18), wraplength=480, justify='right')
+    # doc.place(x=0, y=120, width=500, height=400)
+
+    text = tk.Text(facture, font=('Helvetica', 18), spacing1=5, spacing2=20, spacing3=5)
+    text.tag_configure("right", justify='right')
+    text.insert('end', content)
+    text.tag_add('right', 1.0, 'end')
+    text.configure(state='disabled', wrap='word')
+    text.place(x=0, y=180, width=500, height=400)
 
     facture.mainloop()
 
