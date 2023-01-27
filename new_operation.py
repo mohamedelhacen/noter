@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import sqlite3
 
-from utils import exitt
+from utils import exitt, fill
 
 dir = os.path.abspath(os.path.dirname(__file__))
 db = sqlite3.connect(os.path.join(dir, 'database.db'))
@@ -50,8 +50,8 @@ class New:
         self.new.mainloop()
 
 
-def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
-                               re_data, re_number, amount, date, code):
+def save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
+               re_data, re_number, amount, date, code):
 
     cursor.execute("""INSERT OR IGNORE INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?)""",
                    [s_name, s_ni, s_birthd, s_birthp])
@@ -70,8 +70,12 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     VALUES (?, ?, ?, ?, ?, ?)""", [amount, date, code, s_id, b_id, re_id])
 
     db.commit()
+
+
+def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
+                               re_data, re_number, amount, date, code):
     facture = tk.Toplevel()
-    facture.geometry("500x720")
+    facture.geometry("500x800+100+0")
     facture.title("الوثيقة")
 
     fac_img = tk.PhotoImage(file=os.path.join(dir, 'design/fac.001.png'))
@@ -84,21 +88,40 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     # canvas.place(x=0, y=180, width=500, height=600, bordermode='outside')
 
     dt = tk.Label(facture, text=code, font=('Helvetica', 16), justify='center')
-    dt.place(x=180, y=100, width=150, height=25)
+    dt.place(x=180, y=100, width=120, height=25)
     cd = tk.Label(facture, text=date, font=('Helvetica', 16), justify='right')
     cd.place(x=180, y=130, width=120, height=25)
 
     # doc = tk.Label(canvas, text=text, font=('Helvetica', 18), wraplength=480, justify='right')
     # doc.place(x=0, y=120, width=500, height=400)
 
-    text = tk.Text(facture, font=('Helvetica', 18), spacing1=5, spacing2=20, spacing3=5)
+    text = tk.Text(facture, font=('Helvetica', 18), spacing1=5, spacing2=20, spacing3=5, borderwidth='0')
     text.tag_configure("right", justify='right')
     text.insert('end', content)
     text.tag_add('right', 1.0, 'end')
-    text.configure(state='disabled', wrap='word')
-    text.place(x=0, y=180, width=500, height=400)
+    text.configure(state='disabled', wrap='word', blockcursor=False)
+    text.place(x=0, y=200, width=500, height=300)
+
+    butt1 = tk.Button(facture, text="طباعة و حفظ")
+    butt1.place(x=300, y=750, width=100, height=25)
+    butt1.configure(command=lambda: save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp,
+                                                   nbr_rec, city, block, re_data, re_number, amount, date, code))
+
+    butt2 = tk.Button(facture, text="تعديل أو إلغاء")
+    butt2.place(x=100, y=750, width=100, height=25)
 
     facture.mainloop()
+
+
+def print_document():
+    print('printed')
+
+
+def save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
+                   re_data, re_number, amount, date, code):
+    save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
+               re_data, re_number, amount, date, code)
+    print_document()
 
 
 class RealEstate:
@@ -120,63 +143,50 @@ class RealEstate:
         # اليائع
         self.entry1 = tk.Entry(self.top, justify='right')
         self.entry1.place(x=550, y=160, width=240, height=40)
-        self.entry1.insert(0, 'محمد الحسن حبيب')
 
         self.entry2 = tk.Entry(self.top, justify='center')
         self.entry2.place(x=380, y=160, width=120, height=40)
-        self.entry2.insert(0, '222222222')
 
         self.entry3 = tk.Entry(self.top, justify='center')
         self.entry3.place(x=200, y=160, width=100, height=40)
-        self.entry3.insert(0, '12/12/1995')
 
         self.entry4 = tk.Entry(self.top, justify='right')
         self.entry4.place(x=40, y=160, width=100, height=40)
-        self.entry4.insert(0, 'بوكي')
 
         # المشتري
         self.entry5 = tk.Entry(self.top, justify='right')
         self.entry5.place(x=550, y=282, width=240, height=40)
-        self.entry5.insert(0, 'محمد محمود')
 
         self.entry6 = tk.Entry(self.top, justify='center')
         self.entry6.place(x=380, y=282, width=120, height=40)
-        self.entry6.insert(0, '33333333')
 
         self.entry7 = tk.Entry(self.top, justify='center')
         self.entry7.place(x=200, y=282, width=100, height=40)
-        self.entry7.insert(0, '10/10/1989')
 
         self.entry8 = tk.Entry(self.top, justify='right')
         self.entry8.place(x=40, y=282, width=100, height=40)
-        self.entry8.insert(0, 'روصو')
 
         # تفاصيل العقار
         self.entry9 = tk.Entry(self.top, justify='right')
         self.entry9.place(x=680, y=415, width=120, height=40)
-        self.entry9.insert(0, 'TNS1-1844')
 
         self.entry10 = tk.Entry(self.top, justify='right')
         self.entry10.place(x=680, y=415, width=120, height=40)
-        self.entry10.insert(0, 'دار النعيم')
 
         self.entry11 = tk.Entry(self.top, justify='center')
         self.entry11.place(x=480, y=415, width=120, height=40)
-        self.entry11.insert(0, 'TNS1')
 
         self.entry12 = tk.Entry(self.top, justify='center')
         self.entry12.place(x=280, y=415, width=120, height=40)
-        self.entry12.insert(0, '2013')
 
         self.entry13 = tk.Entry(self.top, justify='right')
         self.entry13.place(x=80, y=415, width=120, height=40)
-        self.entry13.insert(0, '750')
-
+        # self.entry13.insert(0, '750')
 
         # تفاصيل العملية
         self.entry14 = tk.Entry(self.top, justify='center')
         self.entry14.place(x=680, y=550, width=120, height=40)
-        self.entry14.insert(0, '40000')
+        # self.entry14.insert(0, '40000')
 
         self.entry15 = tk.Entry(self.top, justify='center')
         self.entry15.place(x=480, y=550, width=120, height=40)
@@ -198,11 +208,42 @@ class RealEstate:
 
         self.button3 = tk.Button(self.top, text="العودة")
         self.button3.place(x=80, y=645, width=180, height=65)
+        self.button3.configure(command=lambda: self.fill())
+
+        self.conn = sqlite3.connect(os.path.join(dir, 'database.db'))
+        self.cur = self.conn.cursor()
+
+        # self.entry2.bind('<KeyRelease>', lambda: self.fill())
 
         self.top.mainloop()
 
     def cancel(self):
         pass
+
+    def fill(self):
+
+        if self.entry2.get():
+            self.s_rows = self.cur.execute("SELECT * FROM people WHERE ni = ?", [self.entry2.get()])
+            print(self.s_rows.fetchall())
+            if len(self.s_rows.fetchall()) > 0:
+                self.s_rows_fetched = self.s_rows.fetchall()[0]
+
+                self.entry1.insert(0, self.s_rows_fetched[1])
+                self.entry3.insert(0, self.s_rows_fetched[3])
+                self.entry4.insert(0, self.s_rows_fetched[4])
+
+        if self.entry6.get():
+            self.b_rows = self.cur.execute("SELECT * FROM people WHERE ni = ?", [self.entry6.get()]).fetchall()[0]
+            self.entry5.insert(0, self.b_rows[1])
+            self.entry7.insert(0, self.b_rows[3])
+            self.entry8.insert(0, self.b_rows[4])
+
+        if self.entry9.get():
+            self.b_rows = self.cur.execute("SELECT * FROM real_estate WHERE nbr_rec = ?", [self.entry9.get()]).fetchall()[0]
+            self.entry10.insert(0, self.b_rows[1])
+            self.entry11.insert(0, self.b_rows[3])
+            self.entry12.insert(0, self.b_rows[4])
+            self.entry13.insert(0, self.b_rows[5])
 
     def save(self):
         if self.entry1.get():
