@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import sqlite3
 
-from utils import exitt, fill
+from utils import exitt, take_screenshot
 
 dir = os.path.abspath(os.path.dirname(__file__))
 db = sqlite3.connect(os.path.join(dir, 'database.db'))
@@ -64,7 +64,7 @@ def save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birth
 
     s_id = cursor.execute("SELECT id FROM people WHERE ni = ?", [s_ni]).fetchone()[0]
     b_id = cursor.execute("SELECT id FROM people WHERE ni = ?", [b_ni]).fetchone()[0]
-    re_id = cursor.execute("SELECT id FROM real_estate WHERE nbr_rec = ?", [re_number]).fetchone()[0]
+    re_id = cursor.execute("SELECT id FROM real_estate WHERE nbr_rec = ?", [nbr_rec]).fetchone()[0]
 
     cursor.execute("""INSERT INTO real_estate_sales(amount, date, code, seller_Id, buyer_Id, real_estate_Id) 
     VALUES (?, ?, ?, ?, ?, ?)""", [amount, date, code, s_id, b_id, re_id])
@@ -102,10 +102,12 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     text.configure(state='disabled', wrap='word', blockcursor=False)
     text.place(x=0, y=200, width=500, height=300)
 
+    coordinates = (500, 700, 100, 0)
+
     butt1 = tk.Button(facture, text="طباعة و حفظ")
     butt1.place(x=300, y=750, width=100, height=25)
     butt1.configure(command=lambda: save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp,
-                                                   nbr_rec, city, block, re_data, re_number, amount, date, code))
+                                                   nbr_rec, city, block, re_data, re_number, amount, date, code, coordinates))
 
     butt2 = tk.Button(facture, text="تعديل أو إلغاء")
     butt2.place(x=100, y=750, width=100, height=25)
@@ -118,10 +120,10 @@ def print_document():
 
 
 def save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
-                   re_data, re_number, amount, date, code):
+                   re_data, re_number, amount, date, code, coordinates):
     save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
                re_data, re_number, amount, date, code)
-    print_document()
+    take_screenshot(coordinates[0], coordinates[1], coordinates[2], coordinates[3])
 
 
 class RealEstate:
@@ -169,6 +171,7 @@ class RealEstate:
         # تفاصيل العقار
         self.entry9 = tk.Entry(self.top, justify='right')
         self.entry9.place(x=680, y=415, width=120, height=40)
+        self.entry9.insert(0, 'tns-1900')
 
         self.entry10 = tk.Entry(self.top, justify='right')
         self.entry10.place(x=680, y=415, width=120, height=40)
@@ -208,7 +211,7 @@ class RealEstate:
 
         self.button3 = tk.Button(self.top, text="العودة")
         self.button3.place(x=80, y=645, width=180, height=65)
-        self.button3.configure(command=lambda: self.fill())
+        # self.button3.configure(command=lambda: self.fill())
 
         self.conn = sqlite3.connect(os.path.join(dir, 'database.db'))
         self.cur = self.conn.cursor()
