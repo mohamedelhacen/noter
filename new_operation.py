@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
+
 from datetime import datetime
 import os
 import sqlite3
@@ -31,6 +33,7 @@ class New:
         self.button2 = tk.Button(self.new)
         self.button2.place(x=387, y=210, width=252, height=72)
         self.button2.configure(text="سيارة")
+        self.button2.configure(command=Car)
 
         self.button3 = tk.Button(self.new)
         self.button3.place(x=22, y=210, width=252, height=72)
@@ -147,74 +150,81 @@ class RealEstate:
 
         # اليائع
         self.entry1 = tk.Entry(self.top, justify='right')
-        self.entry1.place(x=550, y=160, width=240, height=40)
+        self.entry1.place(x=380, y=130, width=280, height=30)
 
         self.entry2 = tk.Entry(self.top, justify='center')
-        self.entry2.place(x=380, y=160, width=120, height=40)
+        self.entry2.place(x=740, y=130, width=120, height=30)
 
         self.entry3 = tk.Entry(self.top, justify='center')
-        self.entry3.place(x=200, y=160, width=100, height=40)
+        self.entry3.place(x=200, y=130, width=110, height=30)
 
         self.entry4 = tk.Entry(self.top, justify='right')
-        self.entry4.place(x=40, y=160, width=100, height=40)
+        self.entry4.place(x=50, y=130, width=110, height=30)
 
         # المشتري
         self.entry5 = tk.Entry(self.top, justify='right')
-        self.entry5.place(x=550, y=282, width=240, height=40)
+        self.entry5.place(x=380, y=230, width=280, height=30)
 
         self.entry6 = tk.Entry(self.top, justify='center')
-        self.entry6.place(x=380, y=282, width=120, height=40)
+        self.entry6.place(x=740, y=230, width=120, height=30)
 
         self.entry7 = tk.Entry(self.top, justify='center')
-        self.entry7.place(x=200, y=282, width=100, height=40)
+        self.entry7.place(x=200, y=230, width=110, height=30)
 
         self.entry8 = tk.Entry(self.top, justify='right')
-        self.entry8.place(x=40, y=282, width=100, height=40)
+        self.entry8.place(x=50, y=230, width=110, height=30)
 
         # تفاصيل العقار
         self.entry9 = tk.Entry(self.top, justify='right')
-        self.entry9.place(x=680, y=415, width=120, height=40)
+        self.entry9.place(x=740, y=330, width=120, height=30)
         self.entry9.insert(0, 'tns-1900')
 
         self.entry10 = tk.Entry(self.top, justify='right')
-        self.entry10.place(x=680, y=415, width=120, height=40)
+        self.entry10.place(x=550, y=330, width=120, height=30)
 
         self.entry11 = tk.Entry(self.top, justify='center')
-        self.entry11.place(x=480, y=415, width=120, height=40)
+        self.entry11.place(x=375, y=330, width=110, height=30)
 
         self.entry12 = tk.Entry(self.top, justify='center')
-        self.entry12.place(x=280, y=415, width=120, height=40)
+        self.entry12.place(x=200, y=330, width=110, height=30)
 
         self.entry13 = tk.Entry(self.top, justify='right')
-        self.entry13.place(x=80, y=415, width=120, height=40)
+        self.entry13.place(x=50, y=330, width=100, height=30)
         # self.entry13.insert(0, '750')
 
         # تفاصيل العملية
         self.entry14 = tk.Entry(self.top, justify='center')
-        self.entry14.place(x=680, y=550, width=120, height=40)
+        self.entry14.place(x=740, y=430, width=120, height=30)
         # self.entry14.insert(0, '40000')
 
         self.entry15 = tk.Entry(self.top, justify='center')
-        self.entry15.place(x=480, y=550, width=120, height=40)
+        self.entry15.place(x=540, y=430, width=120, height=30)
         self.entry15.insert('0', self.date)
         self.entry15.configure(state='disabled')
 
         self.entry16 = tk.Entry(self.top, justify='center')
-        self.entry16.place(x=280, y=550, width=120, height=40)
+        self.entry16.place(x=365, y=430, width=120, height=30)
         self.entry16.insert('0', self.code)
         self.entry16.configure(state='disabled')
 
+        self.var1 = tk.IntVar()
+        self.var2 = tk.IntVar()
+        self.checkb1 = tk.Checkbutton(self.top, text='بيع', variable=self.var1)
+        self.checkb1.place(x=200, y=430, width=80, height=30)
+        self.checkb1.select()
+        print(self.var1.get())
+        self.checkb2 = tk.Checkbutton(self.top, text='تنازل', variable=self.var2)
+        self.checkb2.place(x=200, y=460, width=80, height=30)
+        print(self.var2.get())
+
         # buttons
         self.button1 = tk.Button(self.top, text="إلغاء")
-        self.button1.place(x=727, y=645, width=180, height=65)
+        self.button1.place(x=200, y=600, width=150, height=60)
+        self.button1.configure(command=self.top.destroy)
 
         self.button2 = tk.Button(self.top, text="حفظ")
-        self.button2.place(x=396, y=645, width=180, height=65)
+        self.button2.place(x=600, y=600, width=150, height=60)
         self.button2.configure(command=lambda: self.save())
-
-        self.button3 = tk.Button(self.top, text="العودة")
-        self.button3.place(x=80, y=645, width=180, height=65)
-        self.button3.configure(command=self.top.destroy)
 
         self.conn = sqlite3.connect(os.path.join(dir, 'database.db'))
         self.cur = self.conn.cursor()
@@ -283,8 +293,17 @@ class RealEstate:
                                                                 if self.entry15.get() and self.entry16.get():
                                                                     date = self.entry15.get()
                                                                     code = self.entry16.get()
-
-                                                                    create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
+                                                                    print('var1', self.var1.get())
+                                                                    print('var2', self.var2.get())
+                                                                    if (self.var1.get() == self.var2.get()):
+                                                                        messagebox.showerror('خطأ', "قم بتحديد 'بيع' أو 'تبادل'")
+                                                                    else:
+                                                                        if self.var1.get():
+                                                                            type = 'باع'
+                                                                        else:
+                                                                            type = 'تنازل عن'
+                                                                        print(type)
+                                                                        create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
                                                                                                buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
                                                                                                nbr_rec, city, block, re_data, re_number, amount, date, code)
 
@@ -322,6 +341,17 @@ class RealEstate:
     def back(self):
         pass
 
+
+class Car:
+    def __init__(self):
+        self.car = tk.Toplevel()
+        self.car.geometry("1024x720+0+0")
+        self.car.title("سيارة")
+        self.car.protocol("WM_DELETE_WINDOW", lambda: exitt(self.car))
+
+        self.now = datetime.now()
+        self.date = self.now.strftime("%Y-%m-%d")
+        self.code = self.now.strftime("%Y%m%d%H%M%S")
 
 
 
