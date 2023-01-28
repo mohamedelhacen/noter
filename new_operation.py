@@ -84,39 +84,42 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
 
     content = f""" أشهدني واستكتبني السيد(ة){s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni} أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data} من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni} مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
      """
-    # canvas = tk.Frame(facture, border=1)
-    # canvas.place(x=0, y=180, width=500, height=600, bordermode='outside')
 
-    dt = tk.Label(facture, text=code, font=('Helvetica', 16), justify='center')
-    dt.place(x=180, y=100, width=120, height=25)
-    cd = tk.Label(facture, text=date, font=('Helvetica', 16), justify='right')
-    cd.place(x=180, y=130, width=120, height=25)
+    dt = tk.Text(facture, font=('Helvetica', 16), bd=0, bg='white')
+    dt.insert('end', code)
+    dt.tag_configure("center", justify='center')
+    dt.tag_add('center', 1.0, 'end')
+    dt.place(x=180, y=100, width=150, height=25)
+    dt.config(highlightthickness=0, borderwidth=0)
 
-    # doc = tk.Label(canvas, text=text, font=('Helvetica', 18), wraplength=480, justify='right')
-    # doc.place(x=0, y=120, width=500, height=400)
+    cd = tk.Text(facture, font=('Helvetica', 16))
+    cd.insert('end', date)
+    cd.tag_configure("center", justify='center')
+    cd.tag_add('center', 1.0, 'end')
+    cd.place(x=180, y=132, width=150, height=25)
+    cd.config(highlightthickness=0, borderwidth=0)
 
     text = tk.Text(facture, font=('Helvetica', 18), spacing1=5, spacing2=20, spacing3=5, borderwidth='0')
     text.tag_configure("right", justify='right')
     text.insert('end', content)
     text.tag_add('right', 1.0, 'end')
-    text.configure(state='disabled', wrap='word', blockcursor=False)
+    text.configure(state='disabled', wrap='word', blockcursor=True)
     text.place(x=0, y=200, width=500, height=300)
+    text.config(highlightthickness=0, borderwidth=0)
 
-    coordinates = (500, 700, 100, 0)
+    image_coordinates = (600, 750, 100, 50)
 
     butt1 = tk.Button(facture, text="طباعة و حفظ")
     butt1.place(x=300, y=750, width=100, height=25)
     butt1.configure(command=lambda: save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp,
-                                                   nbr_rec, city, block, re_data, re_number, amount, date, code, coordinates))
+                                                   nbr_rec, city, block, re_data, re_number, amount, date, code,
+                                                   image_coordinates))
 
     butt2 = tk.Button(facture, text="تعديل أو إلغاء")
     butt2.place(x=100, y=750, width=100, height=25)
+    butt2.config(command=facture.destroy)
 
     facture.mainloop()
-
-
-def print_document():
-    print('printed')
 
 
 def save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
@@ -211,7 +214,7 @@ class RealEstate:
 
         self.button3 = tk.Button(self.top, text="العودة")
         self.button3.place(x=80, y=645, width=180, height=65)
-        # self.button3.configure(command=lambda: self.fill())
+        self.button3.configure(command=self.top.destroy)
 
         self.conn = sqlite3.connect(os.path.join(dir, 'database.db'))
         self.cur = self.conn.cursor()

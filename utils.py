@@ -29,4 +29,5 @@ def fill(**kwargs):
 def take_screenshot(width, height, pt1, pt2):
     image = ImageGrab.grab(bbox=(pt1, pt2, width, height))
     image.save('screenshot.png')
+    image.show()
 
