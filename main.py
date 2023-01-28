@@ -14,6 +14,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS real_estate_sales (
             amount REAL NOT NULL,
             date DATE NOT NULL,
             code INTEGER NOT NULL,
+            sale_type VARCHAR(50) NOT NULL,
             seller_Id INTEGER NOT NULL,
             buyer_Id INTEGER NOT NULL,
             real_estate_Id INTEGER NOT NULL,
@@ -29,7 +30,8 @@ cur.execute("""CREATE TABLE IF NOT EXISTS real_estate (
             city VARCHAR(50) NOT NULL,
             block VARCHAR(50) NOT NULL,
             date DATE NOT NULL,
-            number VARCHAR(50) NOT NULL
+            number VARCHAR(50) NOT NULL,
+            statement VARCHAR(50) NOT NULL
             )
 """)
 

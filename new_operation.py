@@ -54,7 +54,7 @@ class New:
 
 
 def save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
-               re_data, re_number, amount, date, code):
+               re_data, re_number, statement, amount, date, code, sale_type):
 
     cursor.execute("""INSERT OR IGNORE INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?)""",
                    [s_name, s_ni, s_birthd, s_birthp])
@@ -62,21 +62,21 @@ def save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birth
     cursor.execute("""INSERT OR IGNORE INTO people(name, ni, birth_date, birth_place) VALUES (?, ?, ?, ?)""",
                    [b_name, b_ni, b_birthd, b_birthp])
 
-    cursor.execute(f"""INSERT OR IGNORE INTO real_estate(nbr_rec, city, block, date, number) VALUES (?, ?, ?, ?, ?)""",
-                   [nbr_rec, city, block, re_data, re_number])
+    cursor.execute(f"""INSERT OR IGNORE INTO real_estate(nbr_rec, city, block, date, number, statement) VALUES (?, ?, ?, ?, ?, ?)""",
+                   [nbr_rec, city, block, re_data, re_number, statement])
 
     s_id = cursor.execute("SELECT id FROM people WHERE ni = ?", [s_ni]).fetchone()[0]
     b_id = cursor.execute("SELECT id FROM people WHERE ni = ?", [b_ni]).fetchone()[0]
     re_id = cursor.execute("SELECT id FROM real_estate WHERE nbr_rec = ?", [nbr_rec]).fetchone()[0]
 
-    cursor.execute("""INSERT INTO real_estate_sales(amount, date, code, seller_Id, buyer_Id, real_estate_Id) 
-    VALUES (?, ?, ?, ?, ?, ?)""", [amount, date, code, s_id, b_id, re_id])
+    cursor.execute("""INSERT INTO real_estate_sales(amount, date, code, sale_type, seller_Id, buyer_Id, real_estate_Id) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)""", [amount, date, code, sale_type, s_id, b_id, re_id])
 
     db.commit()
 
 
 def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
-                               re_data, re_number, amount, date, code):
+                               re_data, re_number, statement, amount, date, code, sale_type):
     facture = tk.Toplevel()
     facture.geometry("500x800+100+0")
     facture.title("الوثيقة")
@@ -85,7 +85,7 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     backg = tk.Label(facture, image=fac_img)
     backg.place(x=0, y=0, width=500, height=700)
 
-    content = f""" أشهدني واستكتبني السيد(ة){s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni} أنه تنازل عن قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة (batch) صادرة بتاريخ {re_data} من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni} مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
+    content = f""" أشهدني واستكتبني السيد(ة){s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni} أنه {sale_type} قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة {statement} صادرة بتاريخ {re_data} من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni} مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
      """
 
     dt = tk.Text(facture, font=('Helvetica', 16), bd=0, bg='white')
@@ -115,8 +115,8 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     butt1 = tk.Button(facture, text="طباعة و حفظ")
     butt1.place(x=300, y=750, width=100, height=25)
     butt1.configure(command=lambda: save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp,
-                                                   nbr_rec, city, block, re_data, re_number, amount, date, code,
-                                                   image_coordinates))
+                                                   nbr_rec, city, block, re_data, re_number, statement, amount, date,
+                                                   code, sale_type, image_coordinates))
 
     butt2 = tk.Button(facture, text="تعديل أو إلغاء")
     butt2.place(x=100, y=750, width=100, height=25)
@@ -126,9 +126,9 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
 
 
 def save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
-                   re_data, re_number, amount, date, code, coordinates):
+                   re_data, re_number, statement, amount, date, code, sale_type, coordinates):
     save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
-               re_data, re_number, amount, date, code)
+               re_data, re_number, statement, amount, date, code, sale_type)
     take_screenshot(coordinates[0], coordinates[1], coordinates[2], coordinates[3])
 
 
@@ -180,42 +180,42 @@ class RealEstate:
         self.entry9.insert(0, 'tns-1900')
 
         self.entry10 = tk.Entry(self.top, justify='right')
-        self.entry10.place(x=550, y=330, width=120, height=30)
+        self.entry10.place(x=600, y=330, width=100, height=30)
 
         self.entry11 = tk.Entry(self.top, justify='center')
-        self.entry11.place(x=375, y=330, width=110, height=30)
+        self.entry11.place(x=450, y=330, width=100, height=30)
 
         self.entry12 = tk.Entry(self.top, justify='center')
-        self.entry12.place(x=200, y=330, width=110, height=30)
+        self.entry12.place(x=300, y=330, width=100, height=30)
 
         self.entry13 = tk.Entry(self.top, justify='right')
-        self.entry13.place(x=50, y=330, width=100, height=30)
-        # self.entry13.insert(0, '750')
+        self.entry13.place(x=150, y=330, width=100, height=30)
+
+        self.combobox = ttk.Combobox(self.top, values=['badch', 'nobadch'])
+        self.combobox.place(x=40, y=330, width=100, height=30)
 
         # تفاصيل العملية
         self.entry14 = tk.Entry(self.top, justify='center')
         self.entry14.place(x=740, y=430, width=120, height=30)
-        # self.entry14.insert(0, '40000')
 
         self.entry15 = tk.Entry(self.top, justify='center')
         self.entry15.place(x=540, y=430, width=120, height=30)
         self.entry15.insert('0', self.date)
-        self.entry15.configure(state='disabled')
+        # self.entry15.configure(state='disabled')
 
         self.entry16 = tk.Entry(self.top, justify='center')
         self.entry16.place(x=365, y=430, width=120, height=30)
         self.entry16.insert('0', self.code)
-        self.entry16.configure(state='disabled')
+        # self.entry16.configure(state='disabled')
 
         self.var1 = tk.IntVar()
-        self.var2 = tk.IntVar()
         self.checkb1 = tk.Checkbutton(self.top, text='بيع', variable=self.var1)
         self.checkb1.place(x=200, y=430, width=80, height=30)
-        self.checkb1.select()
-        print(self.var1.get())
+
+        self.var2 = tk.IntVar()
         self.checkb2 = tk.Checkbutton(self.top, text='تنازل', variable=self.var2)
         self.checkb2.place(x=200, y=460, width=80, height=30)
-        print(self.var2.get())
+
 
         # buttons
         self.button1 = tk.Button(self.top, text="إلغاء")
@@ -288,29 +288,30 @@ class RealEstate:
                                                         re_data = self.entry12.get()
                                                         if self.entry13.get():
                                                             re_number = self.entry13.get()
-                                                            if self.entry14.get():
-                                                                amount = self.entry14.get()
-                                                                if self.entry15.get() and self.entry16.get():
-                                                                    date = self.entry15.get()
-                                                                    code = self.entry16.get()
-                                                                    print('var1', self.var1.get())
-                                                                    print('var2', self.var2.get())
-                                                                    if (self.var1.get() == self.var2.get()):
-                                                                        messagebox.showerror('خطأ', "قم بتحديد 'بيع' أو 'تبادل'")
-                                                                    else:
-                                                                        if self.var1.get():
-                                                                            type = 'باع'
+                                                            if self.combobox.get():
+                                                                statement = self.combobox.get()
+                                                                if self.entry14.get():
+                                                                    amount = self.entry14.get()
+                                                                    if self.entry15.get() and self.entry16.get():
+                                                                        date = self.entry15.get()
+                                                                        code = self.entry16.get()
+                                                                        if (self.var1.get() == self.var2.get()):
+                                                                            messagebox.showerror('خطأ', "قم بتحديد 'بيع' أو 'تبادل'")
                                                                         else:
-                                                                            type = 'تنازل عن'
-                                                                        print(type)
-                                                                        create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
-                                                                                               buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
-                                                                                               nbr_rec, city, block, re_data, re_number, amount, date, code)
+                                                                            if self.var1.get():
+                                                                                sale_type = 'باع'
+                                                                            else:
+                                                                                sale_type = 'تنازل عن'
+                                                                            create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
+                                                                                                   buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
+                                                                                                   nbr_rec, city, block, re_data, re_number, statement, amount, date, code, sale_type)
 
+                                                                    else:
+                                                                        messagebox.showerror('خطأ', "يوجد خطأ في المدخلات")
                                                                 else:
-                                                                    messagebox.showerror('خطأ', "يوجد خطأ في المدخلات")
+                                                                    messagebox.showerror('خطأ', "يجب إدخال المبلغ")
                                                             else:
-                                                                messagebox.showerror('خطأ', "يجب إدخال المبلغ")
+                                                                messagebox.showerror('خطأ', "يجب إدخال نوع الإفادة")
                                                         else:
                                                             messagebox.showerror('خطأ', "يجب إدخال رقم العقار")
                                                     else:
