@@ -1,4 +1,4 @@
-from tkinter import messagebox
+from tkinter import messagebox, font
 # import _winapi as win
 # from os import waitpid
 # from sys import exc_info as ei

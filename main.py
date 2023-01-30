@@ -1,10 +1,11 @@
 import sqlite3
 import tkinter as tk
-import tkinter.font as ft
+from tkinter import font, ttk
 import os
+
 from new_operation import New
 from utils import exitt
-
+from search import Search
 
 dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -58,7 +59,16 @@ root.geometry("1024x720+0+0")
 root.resizable(0, 0)
 root.protocol("WM_DELETE_WINDOW", lambda: exitt(root))
 
-# print(ft.nametofont('TkDefaultFont').actual())
+# defaultFont = font.nametofont("TkDefaultFont")
+# defaultFont.configure(family="Segoe Script",
+#                       size=19,
+#                       weight=font.BOLD)
+#
+# style = ttk.Style()
+# style.configure('root.Button', font=('TkFixedFont', 16))
+#
+# print(font.nametofont("TkFixedFont").actual())
+# print(font.nametofont('TkDefaultFont').actual())
 
 # root.option_add("*Button.Font", "Tahoma 9 normal roman underline")
 
@@ -93,6 +103,7 @@ button3.configure(borderwidth=0)
 button3.configure(border=0)
 button3.configure(background='orange')
 button3.configure(text="بحث")
+button3.configure(command=Search)
 
 button4 = tk.Button(root)
 button4.place(x=400, y=450, width=200, height=60)
@@ -105,8 +116,7 @@ button4.configure(background='orange')
 button4.configure(text="إغلاق البرنامج")
 button4.configure(command=lambda: exitt(root))
 
-print(root.option_get('padY', "Button"))
-print(root.option_get('padX', "Button"))
+
 
 root.mainloop()
 

@@ -98,6 +98,8 @@ def save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birth
 
 def save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
                    re_data, re_number, statement, amount, date, code, sale_type, window):
+    print(window.winfo_y(), window.winfo_rooty(), window.winfo_height())
+    print(window.winfo_x(), window.winfo_rootx(), window.winfo_width())
     capture(window)
     save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
                re_data, re_number, statement, amount, date, code, sale_type)
@@ -375,5 +377,129 @@ class Car:
         self.date = self.now.strftime("%Y-%m-%d")
         self.code = self.now.strftime("%Y%m%d%H%M%S")
 
+        self.label1 = tk.Label(self.car)
+        self.backg = tk.PhotoImage(file=os.path.join(dir, 'design/design.003.png'))
+        self.label1.configure(image=self.backg)
+        self.label1.place(relx=0, rely=0)
 
+        # اليائع
+        self.entry1 = tk.Entry(self.car, justify='right')
+        self.entry1.place(x=380, y=130, width=280, height=30)
 
+        self.entry2 = tk.Entry(self.car, justify='center')
+        self.entry2.place(x=740, y=130, width=120, height=30)
+
+        self.entry3 = tk.Entry(self.car, justify='center')
+        self.entry3.place(x=200, y=130, width=110, height=30)
+
+        self.entry4 = tk.Entry(self.car, justify='right')
+        self.entry4.place(x=50, y=130, width=110, height=30)
+
+        # المشتري
+        self.entry5 = tk.Entry(self.car, justify='right')
+        self.entry5.place(x=380, y=230, width=280, height=30)
+
+        self.entry6 = tk.Entry(self.car, justify='center')
+        self.entry6.place(x=740, y=230, width=120, height=30)
+
+        self.entry7 = tk.Entry(self.car, justify='center')
+        self.entry7.place(x=200, y=230, width=110, height=30)
+
+        self.entry8 = tk.Entry(self.car, justify='right')
+        self.entry8.place(x=50, y=230, width=110, height=30)
+
+        # تفاصيل السيارة
+        self.entry9 = tk.Entry(self.car, justify='right')
+        self.entry9.place(x=740, y=360, width=120, height=30)
+        self.entry9.insert(0, '5432AK00')
+
+        # تفاصيل العملية
+        self.entry14 = tk.Entry(self.car, justify='center')
+        self.entry14.place(x=740, y=500, width=120, height=30)
+
+        self.entry15 = tk.Entry(self.car, justify='center')
+        self.entry15.place(x=540, y=500, width=120, height=30)
+        self.entry15.insert('0', self.date)
+        # self.entry15.configure(state='disabled')
+
+        self.entry16 = tk.Entry(self.car, justify='center')
+        self.entry16.place(x=365, y=500, width=120, height=30)
+        self.entry16.insert('0', self.code)
+        # self.entry16.configure(state='disabled')
+
+        # buttons
+        self.button1 = tk.Button(self.car, text="إلغاء")
+        self.button1.place(x=200, y=600, width=150, height=60)
+        self.button1.configure(command=self.car.destroy)
+
+        self.button2 = tk.Button(self.car, text="حفظ")
+        self.button2.place(x=600, y=600, width=150, height=60)
+        self.button2.configure(command=lambda: self.save())
+
+    def save(self):
+        if self.entry1.get():
+            seller_name = self.entry1.get()
+            if self.entry2.get():
+                seller_ni = self.entry2.get()
+                if self.entry3.get():
+                    seller_birthdate = self.entry3.get()
+                    if self.entry4.get():
+                        seller_birthplace = self.entry4.get()
+                        if self.entry5.get():
+                            buyer_name = self.entry5.get()
+                            if self.entry6.get():
+                                buyer_ni = self.entry6.get()
+                                if self.entry7.get():
+                                    buyer_birthdate = self.entry7.get()
+                                    if self.entry8.get():
+                                        buyer_birthplace = self.entry8.get()
+                                        if self.entry9.get():
+                                            nbr_rec = self.entry9.get()
+                                            if self.entry9.get():
+                                                city = self.entry9.get()
+                                                if self.entry9.get():
+                                                    block = self.entry9.get()
+                                                    if self.entry9.get():
+                                                        re_data = self.entry9.get()
+                                                        if self.entry9.get():
+                                                            re_number = self.entry9.get()
+
+                                                            if self.entry14.get():
+                                                                amount = self.entry14.get()
+                                                                if self.entry15.get() and self.entry16.get():
+                                                                    date = self.entry15.get()
+                                                                    code = self.entry16.get()
+
+                                                                    create_real_estate_facture(seller_name, seller_ni, seller_birthdate, seller_birthplace,
+                                                                                                   buyer_name, buyer_ni, buyer_birthdate, buyer_birthplace,
+                                                                                                   nbr_rec, city, block, re_data, re_number, re_number, amount, date, code, code)
+                                                                else:
+                                                                    messagebox.showerror('خطأ', "يوجد خطأ في المدخلات")
+                                                            else:
+                                                                messagebox.showerror('خطأ', "يجب إدخال المبلغ")
+                                                        else:
+                                                            messagebox.showerror('خطأ', "يجب إدخال رقم العقار")
+                                                    else:
+                                                        messagebox.showerror('خطأ', "يجب إدخال تاريخ الإصدار")
+                                                else:
+                                                    messagebox.showerror('خطأ', "يجب إدخال القطاع")
+                                            else:
+                                                messagebox.showerror('خطأ', "يجب إدخال المقاطعة")
+                                        else:
+                                            messagebox.showerror('خطأ', "يجب إدخال رقم الوحدة السكنية")
+                                    else:
+                                        messagebox.showerror('خطأ', "يجب إدخال محل ميلاد المشتري")
+                                else:
+                                    messagebox.showerror('خطأ', "يجب إدخال تاريخ ميلاد المشتري")
+                            else:
+                                messagebox.showerror('خطأ', "يجب إدخال الرقم الوطني للمشتري")
+                        else:
+                            messagebox.showerror('خطأ', "يجب إدخال اسم المشتري")
+                    else:
+                        messagebox.showerror('خطأ', "يجب إدخال محل ميلاد البائع")
+                else:
+                    messagebox.showerror('خطأ', "يجب إدخال تاريخ ميلاد البائع")
+            else:
+                messagebox.showerror('خطأ', "يجب إدخال الرقم الوطني للبائع")
+        else:
+            messagebox.showerror('خطأ', "يجب إدخال اسم البائع")
