@@ -44,7 +44,7 @@ exe = EXE(
 )
 app = BUNDLE(
     exe,
-    name='main.app',
-    icon=None,
+    name='noter.app',
+    icon='logo.ico',
     bundle_identifier=None,
 )

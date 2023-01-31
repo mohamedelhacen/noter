@@ -28,13 +28,13 @@ class New:
         self.button1.configure(relief="flat", overrelief="flat")
         self.button1.configure(borderwidth=0)
         self.button1.configure(border=0)
-        self.button1.configure(background='orange')
+        # self.button1.configure(background='#ECFF64')
         self.button1.configure(text="عقار")
         self.button1.configure(command=RealEstate)
-        self.button1.config(highlightthickness=0, borderwidth=0)
+        self.button1.config(highlightthickness=0, borderwidth=0, bg='#ECFF64')
 
         self.button2 = tk.Button(self.new, font=("Helvetica, 30"))
-        self.button2.place(x=300, y=150, width=200, height=80)
+        self.button2.place(x=200, y=150, width=200, height=80)
         self.button2.configure(relief="flat", overrelief="flat")
         self.button2.configure(borderwidth=0)
         self.button2.configure(border=0)
@@ -148,15 +148,17 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     text.place(x=0, y=200, width=500, height=300)
     text.config(highlightthickness=0, borderwidth=0, padx=10, pady=10, compound='top')
 
-    butt1 = tk.Button(facture, text="طباعة و حفظ")
-    butt1.place(x=300, y=750, width=150, height=60)
+    butt1 = tk.Button(facture, text="طباعة و حفظ", font=("Helvetica, 20"))
+    butt1.place(x=300, y=720, width=150, height=50)
+    butt1.configure(relief="flat", overrelief="flat", bg='red')
     butt1.config(highlightthickness=0, borderwidth=0)
     butt1.configure(command=lambda: save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp,
                                                    nbr_rec, city, block, re_data, re_number, statement, amount, date,
                                                    code, sale_type, canvas))
 
-    butt2 = tk.Button(facture, text="تعديل أو إلغاء")
-    butt2.place(x=100, y=750, width=150, height=60)
+    butt2 = tk.Button(facture, text="تعديل أو إلغاء", font=("Helvetica, 20"))
+    butt2.place(x=100, y=720, width=150, height=50)
+    butt2.configure(relief="flat", overrelief="flat")
     butt2.config(highlightthickness=0, borderwidth=0)
     butt2.config(command=facture.destroy)
 

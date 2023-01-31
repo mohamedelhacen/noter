@@ -27,6 +27,8 @@ cur.execute("""CREATE TABLE IF NOT EXISTS real_estate_sales (
             FOREIGN KEY (real_estate_Id) REFERENCES real_estate(id)
             )
 """)
+# cur.execute("""ALTER TABLE real_estate_sales ADD COLUMN sale_type VARCHAR(50)""")
+# cur.execute("""UPDATE real_estate_sales SET sale_type='بيع'""")
 
 # real_estate
 cur.execute("""CREATE TABLE IF NOT EXISTS real_estate (
@@ -39,6 +41,8 @@ cur.execute("""CREATE TABLE IF NOT EXISTS real_estate (
             statement VARCHAR(50) NOT NULL
             )
 """)
+# cur.execute("""ALTER TABLE real_estate ADD COLUMN statement VARCHAR(50) NOT NULL DEFAULT 'badch'""")
+# cur.execute("""UPDATE real_estate SET statement='badch'""")
 
 # people
 cur.execute("""CREATE TABLE IF NOT EXISTS people (
@@ -106,7 +110,7 @@ button3.configure(command=Search)
 button3.config(highlightthickness=0, borderwidth=0)
 
 button4 = tk.Button(root)
-button4.place(x=400, y=450, width=200, height=60)
+button4.place(x=450, y=450, width=200, height=60)
 button4.configure(relief="flat", overrelief="flat")
 button4.configure(font=("Helvetica, 30"))
 button4.configure(borderwidth=0)

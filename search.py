@@ -142,7 +142,8 @@ class Search:
                         but2.configure(command=Search)
 
                     else:
-                        messagebox.showinfo('خطأ', "عذرا لا توحد بيعة بهذا الرقم!\nيرجى التأكد من نوع الرقم ومن الرقم نفسه")
+                        messagebox.showinfo('خطأ',
+                                            "عذرا لا توحد بيعة بهذا الرقم!\nيرجى التأكد من نوع الرقم ومن الرقم نفسه")
 
                 elif self.combobox.get() == values[1]:
                     messagebox.showinfo(values[1], values[1])
