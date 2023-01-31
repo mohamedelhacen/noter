@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 from datetime import datetime
 import os
@@ -25,51 +24,56 @@ class New:
         self.label1.place(relx=0, rely=0)
 
         self.button1 = tk.Button(self.new, font=("Helvetica, 30"))
-        self.button1.place(x=700, y=150, width=200, height=80)
+        self.button1.place(x=600, y=150, width=200, height=80)
         self.button1.configure(relief="flat", overrelief="flat")
         self.button1.configure(borderwidth=0)
         self.button1.configure(border=0)
         self.button1.configure(background='orange')
         self.button1.configure(text="عقار")
         self.button1.configure(command=RealEstate)
+        self.button1.config(highlightthickness=0, borderwidth=0)
 
         self.button2 = tk.Button(self.new, font=("Helvetica, 30"))
-        self.button2.place(x=400, y=150, width=200, height=80)
+        self.button2.place(x=300, y=150, width=200, height=80)
         self.button2.configure(relief="flat", overrelief="flat")
         self.button2.configure(borderwidth=0)
         self.button2.configure(border=0)
         self.button2.configure(background='orange')
         self.button2.configure(text="سيارة")
         self.button2.configure(command=Car)
+        self.button2.config(highlightthickness=0, borderwidth=0)
 
-        self.button3 = tk.Button(self.new, font=("Helvetica, 30"))
-        self.button3.place(x=100, y=150, width=200, height=80)
-        self.button3.configure(relief="flat", overrelief="flat")
-        self.button3.configure(borderwidth=0)
-        self.button3.configure(border=0)
-        self.button3.configure(background='orange')
-        self.button3.configure(text="محل تجاري")
-        self.button3.configure(command=lambda: capture(self.new))
+        # self.button3 = tk.Button(self.new, font=("Helvetica, 30"))
+        # self.button3.place(x=100, y=150, width=200, height=80)
+        # self.button3.configure(relief="flat", overrelief="flat")
+        # self.button3.configure(borderwidth=0)
+        # self.button3.configure(border=0)
+        # self.button3.configure(background='orange')
+        # self.button3.configure(text="محل تجاري")
+        # self.button3.configure(command=lambda: capture(self.new))
+        # self.button3.config(highlightthickness=0, borderwidth=0)
 
-        button4 = tk.Button(self.new)
-        button4.place(x=150, y=450, width=250, height=60)
-        button4.configure(relief="flat", overrelief="flat")
-        button4.configure(font=("Helvetica, 20"))
-        button4.configure(borderwidth=0)
-        button4.configure(border=0)
-        button4.configure(background='orange')
-        button4.configure(text="إغلاق البرنامج")
-        button4.configure(command=lambda: exitt(top))
+        self.button4 = tk.Button(self.new)
+        self.button4.place(x=150, y=450, width=250, height=60)
+        self.button4.configure(relief="flat", overrelief="flat")
+        self.button4.configure(font=("Helvetica, 20"))
+        self.button4.configure(borderwidth=0)
+        self.button4.configure(border=0)
+        self.button4.configure(background='orange')
+        self.button4.configure(text="إغلاق البرنامج")
+        self.button4.configure(command=lambda: exitt(top))
+        self.button4.config(highlightthickness=0, borderwidth=0)
 
-        button4 = tk.Button(self.new)
-        button4.place(x=600, y=450, width=250, height=60)
-        button4.configure(relief="flat", overrelief="flat")
-        button4.configure(font=("Helvetica, 20"))
-        button4.configure(borderwidth=0)
-        button4.configure(border=0)
-        button4.configure(background='orange')
-        button4.configure(text="العودة للصفحة السابقة")
-        button4.configure(command=self.new.destroy)
+        self.button5 = tk.Button(self.new)
+        self.button5.place(x=600, y=450, width=250, height=60)
+        self.button5.configure(relief="flat", overrelief="flat")
+        self.button5.configure(font=("Helvetica, 20"))
+        self.button5.configure(borderwidth=0)
+        self.button5.configure(border=0)
+        self.button5.configure(background='orange')
+        self.button5.configure(text="العودة للصفحة السابقة")
+        self.button5.configure(command=self.new.destroy)
+        self.button5.config(highlightthickness=0, borderwidth=0)
 
         self.new.mainloop()
 
@@ -98,8 +102,8 @@ def save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birth
 
 def save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
                    re_data, re_number, statement, amount, date, code, sale_type, window):
-    print(window.winfo_y(), window.winfo_rooty(), window.winfo_height())
-    print(window.winfo_x(), window.winfo_rootx(), window.winfo_width())
+    # print(window.winfo_y(), window.winfo_rooty(), window.winfo_height())
+    # print(window.winfo_x(), window.winfo_rootx(), window.winfo_width())
     capture(window)
     save_to_db(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp, nbr_rec, city, block,
                re_data, re_number, statement, amount, date, code, sale_type)
@@ -118,7 +122,7 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     backg = tk.Label(canvas, image=fac_img)
     backg.place(x=0, y=0, width=500, height=700)
 
-    content = f""" أشهدني واستكتبني السيد(ة){s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni} أنه {sale_type} قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة {statement} صادرة بتاريخ {re_data} من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni} مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
+    content = f""" أشهدني واستكتبني السيد(ة) {s_name} المولود بتاريخ {s_birthd} في {s_birthp} رقم البطاقة الوطنية {s_ni} أنه {sale_type} قطعة أرضية في {city} القطاع {block} رقمها {re_number} عندها إفادة {statement} صادرة بتاريخ {re_data} من وكالة التنيمة الحضرية للسيد(ة) {b_name} المولود بتاريخ {b_birthd} في {b_birthp} رقم البطاقة الوطنية {b_ni} مقابل مبلغ قدره {amount} استلم البائع المبلغ ولم تبقى بينهم أي مطالبة
      """
 
     dt = tk.Text(canvas, font=('Helvetica', 16), bd=0, bg='white')
@@ -135,22 +139,25 @@ def create_real_estate_facture(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b
     cd.place(x=180, y=132, width=150, height=25)
     cd.config(highlightthickness=0, borderwidth=0)
 
-    text = tk.Text(canvas, font=('Helvetica', 18), spacing1=5, spacing2=20, spacing3=5, borderwidth='0')
-    text.tag_configure("right", justify='right')
-    text.insert('end', content)
-    text.tag_add('right', 1.0, 'end')
-    text.configure(state='disabled', wrap='word', blockcursor=True)
+    # text = tk.Text(canvas, font=('Helvetica', 18), spacing1=5, spacing2=20, spacing3=5, borderwidth='0')
+    # text.tag_configure("right", justify='right')
+    # text.insert('end', content)
+    # text.tag_add('right', 1.0, 'end')
+    text = tk.Label(canvas, font=('Helvetica', 20), text=content, wraplength=500, justify='right', bg='white')
+    # text.configure(state='disabled', wrap='word', blockcursor=True)
     text.place(x=0, y=200, width=500, height=300)
-    text.config(highlightthickness=0, borderwidth=0)
+    text.config(highlightthickness=0, borderwidth=0, padx=10, pady=10, compound='top')
 
     butt1 = tk.Button(facture, text="طباعة و حفظ")
     butt1.place(x=300, y=750, width=150, height=60)
+    butt1.config(highlightthickness=0, borderwidth=0)
     butt1.configure(command=lambda: save_and_print(s_name, s_ni, s_birthd, s_birthp, b_name, b_ni, b_birthd, b_birthp,
                                                    nbr_rec, city, block, re_data, re_number, statement, amount, date,
                                                    code, sale_type, canvas))
 
     butt2 = tk.Button(facture, text="تعديل أو إلغاء")
     butt2.place(x=100, y=750, width=150, height=60)
+    butt2.config(highlightthickness=0, borderwidth=0)
     butt2.config(command=facture.destroy)
 
     facture.mainloop()
@@ -175,28 +182,36 @@ class RealEstate:
         # اليائع
         self.entry1 = tk.Entry(self.top, justify='right')
         self.entry1.place(x=380, y=130, width=280, height=30)
+        self.entry1.insert(0, 'محمد الحسن')
 
         self.entry2 = tk.Entry(self.top, justify='center')
         self.entry2.place(x=740, y=130, width=120, height=30)
+        self.entry2.insert(0, '2222')
 
         self.entry3 = tk.Entry(self.top, justify='center')
         self.entry3.place(x=200, y=130, width=110, height=30)
+        self.entry3.insert(0, '1995')
 
         self.entry4 = tk.Entry(self.top, justify='right')
         self.entry4.place(x=50, y=130, width=110, height=30)
+        self.entry4.insert(0, 'nktt')
 
         # المشتري
         self.entry5 = tk.Entry(self.top, justify='right')
         self.entry5.place(x=380, y=230, width=280, height=30)
+        self.entry5.insert(0, 'sd')
 
         self.entry6 = tk.Entry(self.top, justify='center')
         self.entry6.place(x=740, y=230, width=120, height=30)
+        self.entry6.insert(0, '3333')
 
         self.entry7 = tk.Entry(self.top, justify='center')
         self.entry7.place(x=200, y=230, width=110, height=30)
+        self.entry7.insert(0, '2002')
 
         self.entry8 = tk.Entry(self.top, justify='right')
         self.entry8.place(x=50, y=230, width=110, height=30)
+        self.entry8.insert(0, 'aleg')
 
         # تفاصيل العقار
         self.entry9 = tk.Entry(self.top, justify='right')
@@ -205,22 +220,28 @@ class RealEstate:
 
         self.entry10 = tk.Entry(self.top, justify='right')
         self.entry10.place(x=600, y=360, width=100, height=30)
+        self.entry10.insert(0, 'drnaim')
 
         self.entry11 = tk.Entry(self.top, justify='center')
         self.entry11.place(x=450, y=360, width=100, height=30)
+        self.entry11.insert(0, 'tns')
 
         self.entry12 = tk.Entry(self.top, justify='center')
         self.entry12.place(x=300, y=360, width=100, height=30)
+        self.entry12.insert(0, '2012')
 
         self.entry13 = tk.Entry(self.top, justify='right')
         self.entry13.place(x=150, y=360, width=100, height=30)
+        self.entry13.insert(0, '202')
 
         self.combobox = ttk.Combobox(self.top, values=['badch', 'nobadch'])
         self.combobox.place(x=20, y=360, width=100, height=30)
+        self.combobox.insert(0, 'badch')
 
         # تفاصيل العملية
         self.entry14 = tk.Entry(self.top, justify='center')
         self.entry14.place(x=740, y=500, width=120, height=30)
+        self.entry14.insert(0, '20000')
 
         self.entry15 = tk.Entry(self.top, justify='center')
         self.entry15.place(x=540, y=500, width=120, height=30)
@@ -235,6 +256,7 @@ class RealEstate:
         self.var1 = tk.IntVar()
         self.checkb1 = tk.Checkbutton(self.top, text='بيع', variable=self.var1)
         self.checkb1.place(x=200, y=500, width=80, height=30)
+        self.checkb1.select()
 
         self.var2 = tk.IntVar()
         self.checkb2 = tk.Checkbutton(self.top, text='تنازل', variable=self.var2)
@@ -244,10 +266,12 @@ class RealEstate:
         self.button1 = tk.Button(self.top, text="إلغاء")
         self.button1.place(x=200, y=600, width=150, height=60)
         self.button1.configure(command=self.top.destroy)
+        self.button1.config(highlightthickness=0, borderwidth=0)
 
         self.button2 = tk.Button(self.top, text="حفظ")
         self.button2.place(x=600, y=600, width=150, height=60)
         self.button2.configure(command=lambda: self.save())
+        self.button2.config(highlightthickness=0, borderwidth=0)
 
         self.conn = sqlite3.connect(os.path.join(dir, 'database.db'))
         self.cur = self.conn.cursor()
